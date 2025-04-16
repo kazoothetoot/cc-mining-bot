@@ -67,22 +67,22 @@ while true do
     local _, _, x, y = os.pullEvent("monitor_touch")
 
     -- Move Forward button
-    if isInBox(x, y, 1, 1, 10, 1) then
-        rednet.broadcast("moveforward")
+    if isInBox(x, y, 1, 1, 12, 1) then  -- Adjusted coordinates to match the "Move Forward" button
+        rednet.broadcast("moveforward")  -- Send move forward signal
         mon.setCursorPos(1, 6)
-        mon.clearLine()  -- Clear the line at 6, no need to pass a number
+        mon.clearLine()  -- Clear the line at 6
         mon.write("Moving Forward...")
 
     -- Start Mining button
-    elseif isInBox(x, y, 1, 2, 12, 2) then
-        rednet.broadcast("mine", "turtle")
+    elseif isInBox(x, y, 1, 3, 12, 3) then  -- Adjusted coordinates for "Start Mining"
+        rednet.broadcast("mine")  -- Send mine signal
         mon.setCursorPos(1, 6)
         mon.clearLine()
         mon.write("Started Mining...")
 
     -- Fuel Check button
-    elseif isInBox(x, y, 1, 3, 18, 3) then
-        rednet.broadcast("fuel", "turtle")
+    elseif isInBox(x, y, 1, 5, 18, 5) then  -- Adjusted coordinates for "Fuel Check"
+        rednet.broadcast("fuel")  -- Send fuel check signal
         mon.setCursorPos(1, 6)
         mon.clearLine()
         mon.write("Fuel Check Pressed")
@@ -97,8 +97,8 @@ while true do
         end
 
     -- Exit button
-    elseif isInBox(x, y, 1, 4, 18, 4) then
-        rednet.broadcast("exit", "turtle")
+    elseif isInBox(x, y, 1, 7, 18, 7) then  -- Adjusted coordinates for "Exit"
+        rednet.broadcast("exit")  -- Send exit signal
         mon.setCursorPos(1, 6)
         mon.clearLine()
         mon.write("Exiting...")
@@ -110,4 +110,3 @@ while true do
     
     showTurtleMessage()  -- Display any incoming messages from the turtle
 end
-
