@@ -11,9 +11,12 @@ mon.clear()  -- Clear the screen at the beginning to ensure no residual content
 
 -- Function to download and execute the script from GitHub
 local function downloadAndRunScript(url)
+    print("Downloading script from: " .. url)  -- Debug print for URL
     local response = http.get(url)  -- Get the script from the URL
     if response then
+        print("Script downloaded successfully!")  -- Debug print for successful download
         local script = response.readAll()  -- Read all content from the response
+        print("Executing downloaded script...")  -- Debug print before execution
         load(script)()  -- Load and execute the script
     else
         print("Failed to download the script.")  -- In case the download fails
