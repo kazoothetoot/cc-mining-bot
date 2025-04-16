@@ -33,7 +33,7 @@ function drawUI()
     mon.write("Exit")
 
     -- Test button
-    mon.setCursorPos(1, 12)  -- Test button at position (1,9)
+    mon.setCursorPos(1, 9)  -- Test button at position (1,9)
     mon.setBackgroundColor(colors.green)
     mon.setTextColor(colors.white)
     mon.write("Test")
