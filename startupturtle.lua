@@ -59,41 +59,50 @@ local function startMining()
       end
       turtle.forward()
     end
+    
+    -- After finishing a row, adjust the position for the next row
     if row < height then
-      turtle.turnRight()
-      turtle.forward()
-      turtle.turnRight()
-      moveForward(width)
-      turtle.turnLeft()
-      turtle.turnLeft()
+      turtle.turnRight()  -- Turn to face the next row
+      turtle.forward()    -- Move forward to the next row position
+      turtle.turnRight()  -- Turn to face the correct direction
+      moveForward(width)  -- Move back to the starting position of the new row
+      turtle.turnLeft()   -- Turn to face the next row
+      turtle.turnLeft()   -- Turn to the correct direction
     end
   end
 end
 
 -- main loop
 while true do
-  -- check for low fuel level before doing anything
-  if checkFuel() then
-    break  -- Stop if fuel is low
-  end
-
-  -- check if inventory is full, return to start if true
-  if checkInventory() then
-    rednet.broadcast("Inventory full, returning to start", "turtle")
-    returnToStart()
-    -- Here you would add logic to unload items from the turtle's inventory
-    -- (e.g. drop items, transfer to a chest, etc.)
-    break  -- Exit loop to unload, restart mining after unloading
-  end
-
-  -- Move the turtle forward 6 blocks to get into position
-  moveForward(6)
+  -- Listen for the "mine" signal from the computer
+  local id, message = rednet.receive("computer")
   
-  -- Start mining the 6x6 area
-  startMining()
+  if message == "mine" then
+    -- Check for low fuel level before doing anything
+    if checkFuel() then
+      break  -- Stop if fuel is low
+    end
 
-  -- After mining, move down one block and repeat mining
-  turtle.up()
+    -- check if inventory is full, return to start if true
+    if checkInventory() then
+      rednet.broadcast("Inventory full, returning to start", "turtle")
+      returnToStart()
+      -- Here you would add logic to unload items from the turtle's inventory
+      -- (e.g. drop items, transfer to a chest, etc.)
+      break  -- Exit loop to unload, restart mining after unloading
+    end
+
+    -- Move the turtle forward 6 blocks to get into position
+    moveForward(6)
+    
+    -- Start mining the 6x6 area
+    startMining()
+
+    -- After mining, move down one block and repeat mining
+    turtle.down()  -- Move down to the next layer of blocks to mine
+
+    rednet.broadcast("Mining complete", "turtle")  -- Notify the computer that mining is done
+  end
 end
 
 -- exit condition: turtle returns when done
