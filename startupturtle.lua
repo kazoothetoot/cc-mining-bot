@@ -74,10 +74,10 @@ end
 
 -- main loop
 while true do
-  -- Listen for the "mine" signal from the computer
+  -- Listen for the "moveforward" or "mine" signals from the computer
   local id, message = rednet.receive("computer")
   
-  if message == "mine" then
+  if message == "moveforward" then
     -- Check for low fuel level before doing anything
     if checkFuel() then
       break  -- Stop if fuel is low
@@ -95,7 +95,8 @@ while true do
     -- Move the turtle forward 6 blocks to get into position
     moveForward(6)
     
-    -- Start mining the 6x6 area
+  elseif message == "mine" then
+    -- Start mining the 6x6 area when "mine" signal is received
     startMining()
 
     -- After mining, move down one block and repeat mining
