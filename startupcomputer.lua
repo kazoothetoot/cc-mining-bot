@@ -79,27 +79,24 @@ while true do
 
     if isRightClick(x, y) then
         -- Right-click behavior for the buttons
-        if isInBox(x, y, 1, 1, 10, 1) then
+        if isInBox(x, y, 1, 1, 2, 1) then  -- Move Forward
             rednet.broadcast("moveforward")
             mon.setCursorPos(1, 6)
-            mon.clearLine()  -- Clear the line at 6, no need to pass a number
+            mon.clearLine()
             mon.write("Moving Forward...")
-
-        -- Start Mining button
-        elseif isInBox(x, y, 1, 2, 12, 2) then
+        
+        elseif isInBox(x, y, 1, 2, 2, 2) then  -- Start Mining
             rednet.broadcast("mine", "turtle")
             mon.setCursorPos(1, 6)
             mon.clearLine()
             mon.write("Started Mining...")
-
-        -- Fuel Check button
-        elseif isInBox(x, y, 1, 3, 18, 3) then
+        
+        elseif isInBox(x, y, 1, 3, 2, 3) then  -- Fuel Check
             rednet.broadcast("fuel", "turtle")
             mon.setCursorPos(1, 6)
             mon.clearLine()
             mon.write("Fuel Check Pressed")
-
-            -- Wait for the turtle's response
+            
             local id, reply = rednet.receive(5)
             mon.setCursorPos(1, 7)
             if reply then
@@ -107,9 +104,8 @@ while true do
             else
                 mon.write("No Response.")
             end
-
-        -- Exit button
-        elseif isInBox(x, y, 1, 4, 18, 4) then
+        
+        elseif isInBox(x, y, 1, 4, 2, 4) then  -- Exit
             rednet.broadcast("exit", "turtle")
             mon.setCursorPos(1, 6)
             mon.clearLine()
@@ -117,7 +113,7 @@ while true do
             os.sleep(1)
             term.setCursorPos(1, 1)
             term.clear()
-            error("Program Exited")  -- Exit the program gracefully
+            error("Program Exited")
         end
     end
 
