@@ -71,12 +71,16 @@ end
 memoryCheck()  -- Call the memory check function
 
 -- Clear the screen after "Starting Video Output" to prepare for next steps
+mon.setCursorPos(1, 6)  -- Set cursor position after the "video output" line
 mon.clear()
 
 -- Show the random characters to simulate the "garbage" text
 displayRandomGarbage()
 
--- After "BIOS startup", we proceed with downloading and running the main script
+-- Clear the screen again after displaying the random characters
+mon.clear()
+
+-- After clearing the screen, show the starting message for the main program
 mon.setCursorPos(1, 1)  -- Move the cursor to the top
 mon.write("Starting main program...")
 
