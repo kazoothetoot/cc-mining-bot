@@ -44,7 +44,7 @@ local function displayStartup()
         clearLine(3)
         mon.setCursorPos(1, 1)
         mon.write(frame)
-        os.sleep(math.random(0.5))
+        os.sleep(0.5)
     end
 
     -- After animation, full clear
