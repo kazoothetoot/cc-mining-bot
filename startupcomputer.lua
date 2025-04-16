@@ -4,7 +4,7 @@ mon.setTextScale(1)  -- Set text scale to 1 for readability
 mon.setBackgroundColor(colors.black)
 mon.setTextColor(colors.green)
 
--- Print BIOS startup sequence
+-- Function to display the startup sequence
 local function displayStartup()
     local messages = {
         "Memory Check . . .",
@@ -12,25 +12,25 @@ local function displayStartup()
         "Initializing Disk . . ."
     }
 
-    -- Display messages with random delays
+    -- Display each message with a delay
     for _, message in ipairs(messages) do
-        mon.clear()  -- Clear the screen before printing the message
+        mon.clearLine(1)  -- Clear the first line of the monitor
         mon.setCursorPos(1, 1)
         mon.write(message)
         os.sleep(math.random(1, 5))  -- Random sleep between 1 and 5 seconds
     end
 
-    -- Display '/ | \' sequence for visual effect
+    -- Display '/ | \' animation
     local seq = {"/", "|", "\\"}
     for _, s in ipairs(seq) do
-        mon.clear()  -- Clear the screen before printing the next symbol
+        mon.clearLine(1)  -- Clear the first line again before printing the next symbol
         mon.setCursorPos(1, 1)
         mon.write(s)
         os.sleep(math.random(1, 5))  -- Random sleep between 1 and 5 seconds
     end
 
-    -- Clear screen after the sequence
-    mon.clear()
+    -- After the animation, clear the line
+    mon.clearLine(1)
 end
 
 -- Call the function to run the startup
