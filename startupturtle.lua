@@ -96,6 +96,11 @@ local function checkFuel()
       -- If the computer sends the "exit" signal, gracefully stop the turtle
       rednet.broadcast("Turtle exiting", "turtle")
       return  -- Exit the program
+
+    elseif message == "test" then
+        -- Handle test button press
+        rednet.broadcast("Test successful!", "computer")
+
     end
   end
   
