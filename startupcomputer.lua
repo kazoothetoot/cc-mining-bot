@@ -34,6 +34,25 @@ local function isInBox(x, y, x1, y1, x2, y2)
     return x >= x1 and x <= x2 and y >= y1 and y <= y2
 end
 
+local function showTurtleMessage()
+    local id, message = rednet.receive("computer", 5)  -- wait for a message from the turtle
+
+    if message then
+        -- Output the message with red background and white text
+        mon.setCursorPos(1, 6)  -- Set position where message will appear
+        mon.setBackgroundColor(colors.red)
+        mon.setTextColor(colors.white)
+        mon.write(message)
+
+        -- Wait for 5 seconds
+        os.sleep(5)
+
+        -- Clear the line after 5 seconds
+        mon.setCursorPos(1, 6)
+        mon.clearLine()
+    end
+end
+
 while true do
     drawUI()  -- Redraw UI on each loop to reset the screen.
     local _, _, x, y = os.pullEvent("monitor_touch")
@@ -79,4 +98,5 @@ while true do
         term.clear()
         error("Program Exited")  -- Exit the program gracefully
     end
+    showTurtleMessage()
 end
