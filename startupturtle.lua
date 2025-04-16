@@ -80,7 +80,8 @@ while true do
   if message == "moveforward" then
     -- Check for low fuel level before doing anything
     if checkFuel() then
-      break  -- Stop if fuel is low
+      rednet.broadcast("Turtle has low fuel and stopped", "turtle")  -- Inform computer
+      return  -- Exit gracefully if fuel is low
     end
 
     -- check if inventory is full, return to start if true
@@ -89,12 +90,12 @@ while true do
       returnToStart()
       -- Here you would add logic to unload items from the turtle's inventory
       -- (e.g. drop items, transfer to a chest, etc.)
-      break  -- Exit loop to unload, restart mining after unloading
+      return  -- Stop for unloading and restarting
     end
 
     -- Move the turtle forward 6 blocks to get into position
     moveForward(6)
-    
+  
   elseif message == "mine" then
     -- Start mining the 6x6 area when "mine" signal is received
     startMining()
@@ -103,6 +104,11 @@ while true do
     turtle.down()  -- Move down to the next layer of blocks to mine
 
     rednet.broadcast("Mining complete", "turtle")  -- Notify the computer that mining is done
+
+  elseif message == "exit" then
+    -- If the computer sends the "exit" signal, gracefully stop the turtle
+    rednet.broadcast("Turtle exiting", "turtle")
+    return  -- Exit the program
   end
 end
 
