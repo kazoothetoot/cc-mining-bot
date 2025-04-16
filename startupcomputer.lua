@@ -80,14 +80,14 @@ while true do
         mon.write("Moving Forward...")
 
     -- Start Mining button
-    elseif isInBox(x, y, 1, 2, 12, 2) then
+    elseif isInBox(x, y, 1, 3, 12, 3) then
         rednet.broadcast("mine", "turtle")
         mon.setCursorPos(1, 6)
         mon.clearLine()
         mon.write("Started Mining...")
 
     -- Fuel Check button
-    elseif isInBox(x, y, 1, 3, 18, 3) then
+    elseif isInBox(x, y, 1, 5, 18, 5) then
         rednet.broadcast("fuel", "turtle")
         mon.setCursorPos(1, 6)
         mon.clearLine()
@@ -103,7 +103,7 @@ while true do
         end
 
     -- Exit button
-    elseif isInBox(x, y, 1, 4, 18, 4) then
+    elseif isInBox(x, y, 1, 7, 18, 7) then
         rednet.broadcast("exit", "turtle")
         mon.setCursorPos(1, 6)
         mon.clearLine()
