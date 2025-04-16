@@ -5,6 +5,7 @@ rednet.open(peripheral.getName(modem)) -- Open the modem for rednet communicatio
 mon.setTextScale(1)
 mon.setBackgroundColor(colors.black)
 
+-- Function to draw the UI on the monitor
 function drawUI()
     mon.clear()  -- Clear the monitor before drawing new UI
 
@@ -33,6 +34,7 @@ function drawUI()
     mon.write("Exit")
 end
 
+-- Function to check if the touch was within a specific box area
 local function isInBox(x, y, x1, y1, x2, y2)
     -- Ensure x1, y1 is the top-left and x2, y2 is the bottom-right corner
     local left = math.min(x1, x2)
@@ -43,6 +45,7 @@ local function isInBox(x, y, x1, y1, x2, y2)
     return x >= left and x <= right and y >= top and y <= bottom
 end
 
+-- Function to check for messages from the turtle and display them
 local function showTurtleMessage()
     local id, message = rednet.receive(5)  -- Wait for a message with a timeout of 5 seconds
 
@@ -62,51 +65,61 @@ local function showTurtleMessage()
     end
 end
 
+-- Function to detect a right-click on the monitor
+local function isRightClick(x, y)
+    -- We can't directly distinguish right-clicks in the monitor_touch event, so we check using an event workaround
+    local _, _, _, _, button = os.pullEvent("monitor_touch")
+    return button == 2  -- 2 represents a right-click
+end
+
+-- Main loop to continuously display UI and handle button interactions
 while true do
     drawUI()  -- Redraw UI on each loop to reset the screen.
     local _, _, x, y = os.pullEvent("monitor_touch")
 
-    -- Move Forward button
-    if isInBox(x, y, 1, 1, 12, 1) then  -- Adjusted coordinates to match the "Move Forward" button
-        rednet.broadcast("moveforward")  -- Send move forward signal
-        mon.setCursorPos(1, 6)
-        mon.clearLine()  -- Clear the line at 6
-        mon.write("Moving Forward...")
+    if isRightClick(x, y) then
+        -- Right-click behavior for the buttons
+        if isInBox(x, y, 1, 1, 10, 1) then
+            rednet.broadcast("moveforward")
+            mon.setCursorPos(1, 6)
+            mon.clearLine()  -- Clear the line at 6, no need to pass a number
+            mon.write("Moving Forward...")
 
-    -- Start Mining button
-    elseif isInBox(x, y, 1, 3, 12, 3) then  -- Adjusted coordinates for "Start Mining"
-        rednet.broadcast("mine")  -- Send mine signal
-        mon.setCursorPos(1, 6)
-        mon.clearLine()
-        mon.write("Started Mining...")
+        -- Start Mining button
+        elseif isInBox(x, y, 1, 2, 12, 2) then
+            rednet.broadcast("mine", "turtle")
+            mon.setCursorPos(1, 6)
+            mon.clearLine()
+            mon.write("Started Mining...")
 
-    -- Fuel Check button
-    elseif isInBox(x, y, 1, 5, 18, 5) then  -- Adjusted coordinates for "Fuel Check"
-        rednet.broadcast("fuel")  -- Send fuel check signal
-        mon.setCursorPos(1, 6)
-        mon.clearLine()
-        mon.write("Fuel Check Pressed")
-        
-        -- Wait for the turtle's response
-        local id, reply = rednet.receive(5)  -- No need to specify "computer" channel here
-        mon.setCursorPos(1, 7)
-        if reply then
-            mon.write("Fuel level: " .. reply)
-        else
-            mon.write("No Response.")
+        -- Fuel Check button
+        elseif isInBox(x, y, 1, 3, 18, 3) then
+            rednet.broadcast("fuel", "turtle")
+            mon.setCursorPos(1, 6)
+            mon.clearLine()
+            mon.write("Fuel Check Pressed")
+
+            -- Wait for the turtle's response
+            local id, reply = rednet.receive(5)
+            mon.setCursorPos(1, 7)
+            if reply then
+                mon.write("Fuel level: " .. reply)
+            else
+                mon.write("No Response.")
+            end
+
+        -- Exit button
+        elseif isInBox(x, y, 1, 4, 18, 4) then
+            rednet.broadcast("exit", "turtle")
+            mon.setCursorPos(1, 6)
+            mon.clearLine()
+            mon.write("Exiting...")
+            os.sleep(1)
+            term.setCursorPos(1, 1)
+            term.clear()
+            error("Program Exited")  -- Exit the program gracefully
         end
-
-    -- Exit button
-    elseif isInBox(x, y, 1, 7, 18, 7) then  -- Adjusted coordinates for "Exit"
-        rednet.broadcast("exit")  -- Send exit signal
-        mon.setCursorPos(1, 6)
-        mon.clearLine()
-        mon.write("Exiting...")
-        os.sleep(1)  -- Give it a moment to broadcast the exit signal
-        term.setCursorPos(1, 1)
-        term.clear()
-        error("Program Exited")  -- Exit the program gracefully
     end
-    
+
     showTurtleMessage()  -- Display any incoming messages from the turtle
 end
