@@ -30,16 +30,30 @@ local function printLoadingText()
         "Loading Kernel...",
         "Initializing Disk Drives...",
         "Checking CPU...",
-        "Starting Video Output...",
-        "Press any key to continue..."
+        "Starting Video Output..."
     }
 
     for i, line in ipairs(lines) do
         mon.setCursorPos(1, i)  -- Move the cursor to different lines
         mon.setTextColor(colors.white)
         mon.write(line)
-        os.sleep(1)  -- Wait for 1 second to simulate the effect
+        os.sleep(math.random(1, 5))  -- Wait for a random time between 1 and 5 seconds
     end
+end
+
+-- Function to simulate memory check with dots appearing one at a time
+local function memoryCheck()
+    mon.setCursorPos(1, 1)  -- Position for the memory check line
+    mon.setTextColor(colors.white)
+    mon.write("Memory Check: 64MB")  -- Initial part of the message
+
+    -- Show dots one by one with a random delay
+    for i = 1, 3 do
+        mon.write(".")
+        os.sleep(math.random(1, 3))  -- Random delay for each dot (1 to 3 seconds)
+    end
+
+    mon.write(" OK...")  -- Final part of the message
 end
 
 -- Function to display random "garbage" characters
@@ -54,13 +68,16 @@ local function displayRandomGarbage()
 end
 
 -- Run BIOS-like start sequence on the monitor
-printLoadingText()
+memoryCheck()  -- Call the memory check function
+
+-- Clear the screen after "Starting Video Output" to prepare for next steps
+mon.clear()
 
 -- Show the random characters to simulate the "garbage" text
 displayRandomGarbage()
 
 -- After "BIOS startup", we proceed with downloading and running the main script
-mon.setCursorPos(1, 21)  -- Move the cursor to below the BIOS sequence
+mon.setCursorPos(1, 1)  -- Move the cursor to the top
 mon.write("Starting main program...")
 
 -- Pause for a moment
