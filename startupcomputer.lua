@@ -7,31 +7,17 @@ rednet.open(peripheral.getName(modem))  -- Open the modem for rednet communicati
 
 mon.setTextScale(1)
 mon.setBackgroundColor(colors.black)
-mon.clear()
+mon.clear()  -- Clear the screen at the beginning to ensure no residual content
 
 -- Function to download and execute the script from GitHub
 local function downloadAndRunScript(url)
-    -- Download the raw content from GitHub
-    local response = http.get(url)
-    
-    if not response then
-        error("Failed to download the script from GitHub.")
+    local response = http.get(url)  -- Get the script from the URL
+    if response then
+        local script = response.readAll()  -- Read all content from the response
+        load(script)()  -- Load and execute the script
+    else
+        print("Failed to download the script.")  -- In case the download fails
     end
-
-    -- Read the content from the response
-    local script = response.readAll()
-    
-    -- Close the HTTP connection
-    response.close()
-
-    -- Load the Lua script as a function and run it
-    local func, err = load(script)
-    if not func then
-        error("Failed to load the script: " .. err)
-    end
-
-    -- Run the script
-    func()
 end
 
 -- Simulate BIOS startup process (on the monitor)
@@ -45,30 +31,33 @@ local function printLoadingText()
         "Press any key to continue..."
     }
 
-    for _, line in ipairs(lines) do
-        mon.setCursorPos(1, _)
+    for i, line in ipairs(lines) do
+        mon.setCursorPos(1, i)  -- Move the cursor to different lines
         mon.setTextColor(colors.white)
         mon.write(line)
-        os.sleep(1)
+        os.sleep(1)  -- Wait for 1 second to simulate the effect
     end
 end
 
+-- Function to display random "garbage" characters
 local function displayRandomGarbage()
     local chars = {"|", "/", "-", "\\"}
     for i = 1, 20 do
         local randomChar = chars[math.random(1, #chars)]
-        mon.setCursorPos(1, i)
+        mon.setCursorPos(1, i)  -- Move the cursor down to each row
         mon.write(randomChar)
-        os.sleep(0.1)
+        os.sleep(0.1)  -- Small delay to simulate random characters
     end
 end
 
 -- Run BIOS-like start sequence on the monitor
 printLoadingText()
+
+-- Show the random characters to simulate the "garbage" text
 displayRandomGarbage()
 
 -- After "BIOS startup", we proceed with downloading and running the main script
-mon.setCursorPos(1, 21)  -- Move the cursor below the BIOS sequence
+mon.setCursorPos(1, 21)  -- Move the cursor to below the BIOS sequence
 mon.write("Starting main program...")
 
 -- Pause for a moment
