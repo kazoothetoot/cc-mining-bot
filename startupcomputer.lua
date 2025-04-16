@@ -1,53 +1,72 @@
 -- BIOS-like startup screen with delay
 local mon = peripheral.find("monitor") or error("No monitor found")
-mon.setTextScale(1)  -- Set text scale to 1 for readability
+mon.setTextScale(1)
 mon.setBackgroundColor(colors.black)
 mon.setTextColor(colors.green)
 
--- Function to clear the line completely by overwriting with spaces
+-- get monitor width
+local width, height = mon.getSize()
+
+-- Function to clear a specific line on the monitor
 local function clearLine(row)
     mon.setCursorPos(1, row)
-    mon.write(string.rep(" ", mon.getSize()))
+    mon.write(string.rep(" ", width))
 end
 
--- Function to display the startup sequence
+-- Function to clear whole monitor
+local function fullClear()
+    mon.setBackgroundColor(colors.black)
+    mon.clear()
+end
+
+-- Display startup sequence
 local function displayStartup()
+    fullClear()
+
     local messages = {
         "Memory Check . . .",
         "Loading Kernel . . .",
         "Initializing Disk . . ."
     }
 
-    -- Display each message with a delay
-    for i, message in ipairs(messages) do
-        clearLine(i)  -- Clear the specific line before writing new text
+    for i, msg in ipairs(messages) do
+        clearLine(i)
         mon.setCursorPos(1, i)
-        mon.write(message)
-        os.sleep(math.random(1, 5))  -- Random sleep between 1 and 5 seconds
+        mon.write(msg)
+        os.sleep(math.random(1, 5))
     end
 
-    -- Display '/ | \' animation
-    local seq = {"/", "|", "\\"}
-    for i, s in ipairs(seq) do
-        clearLine(1)  -- Clear the first line before writing the next symbol
+    -- Fake animation spinner
+    local anim = {"/", "|", "\\"}
+    for i, frame in ipairs(anim) do
+        clearLine(1)
         mon.setCursorPos(1, 1)
-        mon.write(s)
-        os.sleep(math.random(1, 5))  -- Random sleep between 1 and 5 seconds
+        mon.write(frame)
+        os.sleep(math.random(1, 5))
     end
 
-    -- After the animation, clear the line
-    clearLine(1)
+    -- After animation, full clear
+    fullClear()
+
+    -- Fancy message to say monitor video output has started
+    mon.setCursorPos(1, 1)
+    mon.setTextColor(colors.lime)
+    mon.write("Starting video output...")
+    os.sleep(2)
+    fullClear()
 end
 
--- Call the function to run the startup
+-- Run the BIOS boot sim
 displayStartup()
 
--- Now, load the main script from GitHub and execute it
+-- Load and run the main program
 local url = "https://raw.githubusercontent.com/kazoothetoot/cc-mining-bot/refs/heads/main/main.lua"
 local response = http.get(url)
 if response then
     local script = response.readAll()
-    load(script)()  -- Execute the downloaded script
+    response.close()
+    local fn = load(script)
+    if fn then fn() else print("Script error") end
 else
     print("Failed to download the script.")
 end
