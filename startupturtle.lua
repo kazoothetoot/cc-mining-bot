@@ -74,8 +74,8 @@ end
 
 -- main loop
 while true do
-  -- Listen for the "moveforward" or "mine" signals from the computer
-  local id, message = rednet.receive("computer")
+  -- Listen for the "moveforward", "mine", or "exit" signals from the computer
+  local id, message = rednet.receive(5)  -- Timeout set to 5 seconds
   
   if message == "moveforward" then
     -- Check for low fuel level before doing anything
