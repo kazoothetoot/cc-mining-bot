@@ -40,9 +40,11 @@ local function displayStartup()
     local anim = {"/", "|", "\\"}
     for i, frame in ipairs(anim) do
         clearLine(1)
+        clearLine(2)
+        clearLine(3)
         mon.setCursorPos(1, 1)
         mon.write(frame)
-        os.sleep(math.random(1, 5))
+        os.sleep(math.random(0.5))
     end
 
     -- After animation, full clear
