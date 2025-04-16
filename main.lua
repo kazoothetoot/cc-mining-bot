@@ -26,5 +26,5 @@ local function drawUI()
     drawButton(2, 4, "[--Ping Test--]", colors.white, colors.green)
     drawButton(2, 6, "[--Exit--]", colors.white, colors.red)
 end
-
+print("gay")
 drawUI()
