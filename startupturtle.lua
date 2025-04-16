@@ -1,15 +1,3 @@
--- setup modem
-local modem = peripheral.find("modem") or error("No modem found")
-rednet.open(peripheral.getName(modem))
-
--- check if the computer is connected to the modem
-local function checkConnection()
-  if modem then
-    rednet.broadcast("Connected", "turtle")
-  else
-    rednet.broadcast("Not Found!", "turtle")
-  end
-end
 
 -- check fuel level and send to computer
 local function checkFuel()
