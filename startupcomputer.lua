@@ -1,4 +1,4 @@
--- main.lua
+-- startupcomputer.lua
 
 -- Set up the modem and monitor
 local mon = peripheral.find("monitor") or error("No monitor found")
@@ -34,7 +34,7 @@ local function downloadAndRunScript(url)
     func()
 end
 
--- Simulate BIOS startup process (optional)
+-- Simulate BIOS startup process (on the monitor)
 local function printLoadingText()
     local lines = {
         "Memory Check: 64MB OK...",
@@ -46,7 +46,9 @@ local function printLoadingText()
     }
 
     for _, line in ipairs(lines) do
-        print(line)
+        mon.setCursorPos(1, _)
+        mon.setTextColor(colors.white)
+        mon.write(line)
         os.sleep(1)
     end
 end
@@ -55,21 +57,24 @@ local function displayRandomGarbage()
     local chars = {"|", "/", "-", "\\"}
     for i = 1, 20 do
         local randomChar = chars[math.random(1, #chars)]
-        term.setCursorPos(1, i)
-        term.write(randomChar)
+        mon.setCursorPos(1, i)
+        mon.write(randomChar)
         os.sleep(0.1)
     end
 end
 
--- Run BIOS-like start sequence
+-- Run BIOS-like start sequence on the monitor
 printLoadingText()
 displayRandomGarbage()
 
 -- After "BIOS startup", we proceed with downloading and running the main script
-print("Starting main program...")
+mon.setCursorPos(1, 21)  -- Move the cursor below the BIOS sequence
+mon.write("Starting main program...")
+
+-- Pause for a moment
 os.sleep(2)
 
--- Replace this URL with the raw URL of your GitHub Lua file
+-- Use the provided URL for downloading the Lua script
 local githubRawURL = "https://raw.githubusercontent.com/kazoothetoot/cc-mining-bot/refs/heads/main/main.lua"
 
 -- Download and execute the main program from GitHub
