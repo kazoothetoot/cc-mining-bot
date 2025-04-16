@@ -39,7 +39,7 @@ local function showTurtleMessage()
 
     if message then
         -- Output the message with red background and white text
-        mon.setCursorPos(1, 6)  -- Set position where message will appear
+        mon.setCursorPos(1, 9)  -- Set position where message will appear
         mon.setBackgroundColor(colors.red)
         mon.setTextColor(colors.white)
         mon.write(message)
